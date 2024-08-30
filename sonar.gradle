@@ -39,6 +39,15 @@ sonarqube {
     }
 }
 
+allprojects {
+    tasks.all {
+		outputs.upToDateWhen { false }
+        doFirst {
+			println "Starting task ${name}"
+        }
+    }
+}
+
 // Remove the 'test' task dependency from SonarQube
 tasks.withType(Test) {
     onlyIf { false }
