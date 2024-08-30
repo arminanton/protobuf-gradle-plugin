@@ -1,6 +1,8 @@
 buildscript {
     repositories {
-        maven { url "https://plugins.gradle.org/m2/" } // Mirrors jcenter() and mavenCentral()
+        mavenCentral() // added
+        maven { url "https://repository.axelor.com/nexus/repository/maven-public/" } // added
+        maven { url "https://plugins.gradle.org/m2/" } // original repository
     }
 
     dependencies {
@@ -11,6 +13,7 @@ buildscript {
 }
 
 plugins {
+    id "org.sonarqube" version "3.4.0.2513" // latest compatible with gradle 6.x
     id "org.gradle.kotlin.kotlin-dsl" version "1.4.9"
 }
 
@@ -150,7 +153,7 @@ publishing {
 }
 
 // The Gradle plugin portal doesn't allow signature files.
-if (!gradle.startParameter.taskNames.intersect(['publishPlugins'])) {
+if (gradle.startParameter.taskNames.any { it.contains('publish') }) {
   signing {
        required { isReleaseVersion }
        sign publishing.publications.pluginMaven
@@ -219,3 +222,5 @@ tasks.named('test') {
     "publishPluginMavenPublicationToTestRepository"
   )
 }
+
+apply from: 'sonar.gradle'
