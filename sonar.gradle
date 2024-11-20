@@ -1,0 +1,63 @@
+
+// Configure SonarQube properties
+sonarqube {
+    properties {
+        // The name and version displayed in the SonarQube UI
+        property 'sonar.projectName', 'protobuf-gradle-plugin'
+
+        // The machine name of the project
+        // Must be unique in a given SonarQube instance
+        property 'sonar.projectKey', 'google:protobuf-gradle-plugin'
+
+        // Path containing source files to analyze
+        // Should be relative to this gradle file
+        property 'sonar.sources', 'src/main/groovy,src/main/kotlin'
+
+        // Path containing tests
+        property 'sonar.tests', 'src/test/groovy'
+
+        // Exclude paths you don't want Sonar to examine as a Test for code coverage
+        // (like third-party, configuration files)
+        property 'sonar.test.exclusions', '**/*'
+
+        // Setup unit tests path using JUnit
+        property 'sonar.junit.reportPaths', ''
+
+        // Build paths
+        property 'sonar.java.binaries', 'build/classes/groovy/main,build/classes/kotlin/main'
+        property 'sonar.java.test.binaries', 'build/classes/groovy/test'
+        property 'sonar.java.test.libraries', 'build/libs'
+
+        // Encoding of the source code. Default is default system encoding
+        property 'sonar.sourceEncoding', 'UTF-8'
+
+        // SonarQube server URL
+        property 'sonar.host.url', 'https://sonarqube.intra.nudatasecurity.com'
+
+        // Sonar full output in console
+        property 'sonar.verbose', 'true'
+    }
+}
+
+allprojects {
+    tasks.all {
+		outputs.upToDateWhen { false }
+        doFirst {
+			println "Starting task ${name}"
+        }
+    }
+}
+
+// Remove the 'test' task dependency from SonarQube
+tasks.withType(Test) {
+    onlyIf { false }
+}
+
+tasks.named('compileJava') {
+    dependsOn 'clean'
+    mustRunAfter 'clean'
+}
+
+tasks.named('build') {
+    dependsOn -= 'test'
+}

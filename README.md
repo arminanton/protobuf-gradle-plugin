@@ -18,10 +18,15 @@ For more information about the Protobuf Compiler, please refer to
 
 ## Latest Version
 The latest version is ``0.9.4``. It requires at least __Gradle 5.6__ and __Java 8__.
-To use it with Groovy DSL:
+It is available on Maven Central. To add dependency to it:
 ```gradle
-plugins {
-  id "com.google.protobuf" version "0.9.4"
+buildscript {
+  repositories {
+    gradlePluginPortal()
+  }
+  dependencies {
+    classpath 'com.google.protobuf:protobuf-gradle-plugin:0.9.4'
+  }
 }
 ```
 
@@ -37,14 +42,9 @@ pluginManagement {
     gradlePluginPortal()
     mavenLocal()
   }
-}
-```
-
-And in `build.gradle`:
-
-```gradle
-plugins {
-  id "com.google.protobuf" version "0.9.5-SNAPSHOT"
+  dependencies {
+    classpath 'com.google.protobuf:protobuf-gradle-plugin:0.9.4-SNAPSHOT'
+  }
 }
 ```
 
