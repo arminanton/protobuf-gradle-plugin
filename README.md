@@ -30,13 +30,16 @@ buildscript {
 }
 ```
 
+## Development Version
+
 To try out the head version, you can download the source and build it
 with ``./gradlew publishToMavenLocal -x test`` (we skip tests here because they
-require Android SDK), then:
+require Android SDK), then in `settings.gradle`:
 
 ```gradle
-buildscript {
+pluginManagement {
   repositories {
+    gradlePluginPortal()
     mavenLocal()
   }
   dependencies {
@@ -61,30 +64,6 @@ individual projects.
 
 ## Adding the plugin to your project
 This plugin must work with either the Java plugin or the Android plugin.
-
-
-### Using the `apply` method
-The Java plugin or the Android plugin must be applied before the Protobuf plugin:
-
-```gradle
-apply plugin: 'java'
-apply plugin: 'com.google.protobuf'
-```
-
-```gradle
-apply plugin: 'com.android.application'  // or 'com.android.library'
-apply plugin: 'com.google.protobuf'
-```
-
-### Using the Gradle plugin DSL
-The order of the plugins doesn't matter:
-
-```gradle
-plugins {
-  id "com.google.protobuf" version "0.9.2"
-  id "java"
-}
-```
 
 
 ## Configuring Protobuf compilation
@@ -241,7 +220,7 @@ protobuf {
   ...
   generateProtoTasks {
     // all() returns the collection of all protoc tasks
-    all().each { task ->
+    all().configureEach { task ->
       // Here you can configure the task
     }
 
@@ -317,7 +296,7 @@ task.plugins {
 ```gradle
 protobuf {
   generateProtoTasks {
-    all().each { task ->
+    all().configureEach { task ->
       task.builtins {
         // Generates Python code
         python { }
@@ -364,7 +343,7 @@ protobuf {
     }
   }
   generateProtoTasks {
-    all().each { task ->
+    all().configureEach { task ->
       task.builtins {
         // In most cases you don't need the full Java output
         // if you use the lite output.
@@ -392,7 +371,7 @@ protobuf {
     artifact = 'com.google.protobuf:protoc:3.8.0'
   }
   generateProtoTasks {
-    all().each { task ->
+    all().configureEach { task ->
       task.builtins {
         java {
           option "lite"
